@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relax Pure Veg Ordering</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:opsz@9..40&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      background: #f5f1e8;
+      color: #21352a;
+    }
+    .display-font { font-family: "DM Serif Display", serif; }
+    .page-bg {
+      background:
+        radial-gradient(circle at top left, rgba(111, 140, 86, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(196, 151, 76, 0.16), transparent 30%),
+        linear-gradient(135deg, #f8f4eb 0%, #f1ecdf 100%);
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(33,53,42,0.08);
+      box-shadow: 0 18px 50px rgba(62, 73, 44, 0.08);
+    }
+    .dish-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .dish-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 34px rgba(48, 74, 55, 0.14);
+      border-color: rgba(111, 140, 86, 0.35);
+    }
+    .filter-chip.active {
+      background: #21352a;
+      color: #f8f4eb;
+      border-color: #21352a;
+    }
+    .fade-in {
+      animation: rise 0.7s ease both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(33,53,42,0.18), transparent 45%);
+      pointer-events: none;
+      border-radius: 1.75rem;
+    }
+    .hide { display: none !important; }
+    .focus-ring:focus-visible {
+      outline: 3px solid #c4974c;
+      outline-offset: 2px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto page-bg">
+   <header class="sticky top-0 z-40 border-b border-[#21352a14] bg-[#f8f4eb]/90 backdrop-blur-md">
+    <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"><button id="brandBtn" class="focus-ring flex items-center gap-3 rounded-full px-2 py-1 text-left transition hover:bg-white/60">
+      <div id="logoCircle" class="flex h-11 w-11 items-center justify-center rounded-full text-lg font-extrabold text-[#f8f4eb]" style="background:#6f8c56;">
+       R
+      </div>
+      <div>
+       <p id="topRestaurantName" class="display-font text-2xl leading-none text-[#21352a]">relax</p>
+       <p id="topRestaurantSubtitle" class="text-xs font-semibold uppercase tracking-[0.24em] text-[#6f8c56]">Pure Veg Restaurant</p>
+      </div></button>
+     <nav aria-label="Primary" class="flex items-center gap-2 sm:gap-3"><button id="navWelcome" class="focus-ring rounded-full border border-[#21352a20] px-4 py-2 text-sm font700 font-semibold text-[#21352a] transition hover:bg-white/70">Welcome</button> <button id="navMenu" class="focus-ring rounded-full border border-[#21352a20] px-4 py-2 text-sm font-semibold text-[#21352a] transition hover:bg-white/70">Menu</button> <button id="navCart" class="focus-ring relative rounded-full border border-[#21352a20] px-4 py-2 text-sm font-semibold text-[#21352a] transition hover:bg-white/70"> Cart <span id="cartBadge" class="ml-2 inline-flex min-w-6 items-center justify-center rounded-full bg-[#c4974c] px-2 py-0.5 text-xs font-extrabold text-[#21352a]">0</span> </button>
+     </nav>
+    </div>
+   </header>
+   <main class="w-full">
+    <section id="pageWelcome" class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+     <div class="grid items-center gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
+      <div class="fade-in">
+       <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-[#6f8c5640] bg-[#6f8c5612] px-4 py-2 text-sm font-semibold text-[#4e6840]"><i data-lucide="leaf" class="h-4 w-4"></i> <span id="vegBadgeText">100% Pure Vegetarian</span>
+       </div>
+       <div class="mb-6 flex items-center gap-4">
+        <div id="heroLogoCircle" class="flex h-20 w-20 items-center justify-center rounded-full text-4xl font-extrabold text-[#f8f4eb] shadow-lg" style="background:#6f8c56;">
+         R
+        </div>
+        <div>
+         <p id="heroRestaurantName" class="display-font text-5xl leading-none text-[#21352a] sm:text-6xl">relax</p>
+         <p id="heroRestaurantSubtitle" class="mt-2 text-sm font-bold uppercase tracking-[0.3em] text-[#6f8c56] sm:text-base">Pure Veg Restaurant</p>
+        </div>
+       </div>
+       <h1 id="welcomeHeading" class="display-font max-w-xl text-4xl leading-tight text-[#21352a] sm:text-5xl lg:text-6xl">Welcome to relax</h1>
+       <p id="welcomeSubheading" class="mt-4 max-w-xl text-base leading-7 text-[#486052] sm:text-lg">Scan, Order &amp; Enjoy Authentic Vegetarian Delights</p>
+       <div class="mt-8 flex flex-col gap-3 sm:flex-row"><button id="orderNowBtn" class="focus-ring rounded-full bg-[#21352a] px-7 py-3 text-sm font-extrabold uppercase tracking-[0.14em] text-[#f8f4eb] transition hover:bg-[#2f4a3a]"> Order Now </button> <button id="viewMenuBtn" class="focus-ring rounded-full border border-[#21352a26] bg-white/70 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#21352a] transition hover:bg-white"> View Menu </button>
+       </div>
+      </div>
+      <div class="fade-in">
+       <div class="hero-image relative overflow-hidden rounded-[1.75rem] glass-card p-3"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Warm restaurant dining table with food and cozy lights" loading="lazy" class="h-[420px] w-full rounded-[1.4rem] object-cover" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg,#6f8c56,#c4974c)'">
+       </div>
+      </div>
+     </div>
+     <div class="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="glass-card rounded-[1.5rem] p-5 fade-in">
+       <div class="mb-2 flex items-center gap-2 text-[#c4974c]"><i data-lucide="star" class="h-5 w-5 fill-current"></i> <span class="text-sm font-bold uppercase tracking-[0.14em]">Rating</span>
+       </div>
+       <p class="display-font text-3xl text-[#21352a]">4.8</p>
+       <p class="mt-1 text-sm text-[#486052]">Average Rating</p>
+      </div>
+      <div class="glass-card rounded-[1.5rem] p-5 fade-in">
+       <div class="mb-2 flex items-center gap-2 text-[#6f8c56]"><i data-lucide="sprout" class="h-5 w-5"></i> <span class="text-sm font-bold uppercase tracking-[0.14em]">Pure Veg</span>
+       </div>
+       <p class="display-font text-3xl text-[#21352a]">100%</p>
+       <p class="mt-1 text-sm text-[#486052]">Pure Vegetarian</p>
+      </div>
+      <div class="glass-card rounded-[1.5rem] p-5 fade-in">
+       <div class="mb-2 flex items-center gap-2 text-[#c4974c]"><i data-lucide="users" class="h-5 w-5"></i> <span class="text-sm font-bold uppercase tracking-[0.14em]">Guests</span>
+       </div>
+       <p class="display-font text-3xl text-[#21352a]">500+</p>
+       <p class="mt-1 text-sm text-[#486052]">Happy Customers</p>
+      </div>
+      <div class="glass-card rounded-[1.5rem] p-5 fade-in">
+       <div class="mb-2 flex items-center gap-2 text-[#6f8c56]"><i data-lucide="utensils-crossed" class="h-5 w-5"></i> <span class="text-sm font-bold uppercase tracking-[0.14em]">Chef Picks</span>
+       </div>
+       <p class="display-font text-3xl text-[#21352a]">20+</p>
+       <p class="mt-1 text-sm text-[#486052]">Signature Dishes</p>
+      </div>
+     </div>
+    </section>
+    <section id="pageMenu" class="hide mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+     <div class="glass-card rounded-[2rem] p-6 sm:p-8">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+       <div>
+        <p class="mb-3 inline-flex items-center gap-2 rounded-full border border-[#c4974c40] bg-[#c4974c12] px-4 py-2 text-sm font-semibold text-[#8f6a27]"><i data-lucide="chef-hat" class="h-4 w-4"></i> Signature Selection</p>
+        <h2 id="menuTitle" class="display-font text-4xl text-[#21352a] sm:text-5xl">Our Menu</h2>
+        <p id="menuSubtitle" class="mt-3 max-w-2xl text-base leading-7 text-[#486052]">Authentic vegetarian delights crafted with love</p>
+       </div><button id="browseNowBtn" class="focus-ring rounded-full bg-[#6f8c56] px-6 py-3 text-sm font-extrabold uppercase tracking-[0.14em] text-[#f8f4eb] transition hover:bg-[#5f774b]"> Browse Now </button>
+      </div>
+      <div id="filterWrap" class="mt-8 flex flex-wrap gap-3" aria-label="Menu categories"></div>
+     </div>
+     <div id="dishesAnchor" class="pt-6"></div>
+     <div id="dishGrid" class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"></div>
+    </section>
+    <section id="pageCart" class="hide mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+     <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+      <div class="glass-card rounded-[2rem] p-6 sm:p-8">
+       <div class="mb-6 flex items-center justify-between gap-4">
+        <div>
+         <h2 id="cartTitle" class="display-font text-4xl text-[#21352a]">Your Cart</h2>
+         <p class="mt-2 text-sm text-[#486052]">Review your selected dishes before checkout.</p>
+        </div><button id="continueShoppingBtn" class="focus-ring rounded-full border border-[#21352a20] bg-white/70 px-5 py-3 text-sm font-bold text-[#21352a] transition hover:bg-white"> Back to Menu </button>
+       </div>
+       <div id="cartMessage" class="mb-4 hidden rounded-2xl border px-4 py-3 text-sm font-semibold"></div>
+       <div id="cartList" class="space-y-4"></div>
+       <div id="emptyCartState" class="rounded-[1.5rem] border border-dashed border-[#21352a22] bg-white/50 p-8 text-center">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#6f8c5612] text-[#6f8c56]"><i data-lucide="shopping-basket" class="h-7 w-7"></i>
+        </div>
+        <h3 class="display-font text-2xl text-[#21352a]">Your cart is empty</h3>
+        <p class="mt-2 text-sm leading-6 text-[#486052]">Add your favorite dishes from the menu to continue.</p>
+       </div>
+      </div>
+      <aside class="glass-card rounded-[2rem] p-6 sm:p-8">
+       <h3 class="display-font text-3xl text-[#21352a]">Order Summary</h3>
+       <div class="mt-6 space-y-4 text-sm">
+        <div class="flex items-center justify-between"><span class="text-[#486052]">Items</span> <span id="summaryItems" class="font-extrabold text-[#21352a]">0</span>
+        </div>
+        <div class="flex items-center justify-between"><span class="text-[#486052]">Subtotal</span> <span id="summarySubtotal" class="font-extrabold text-[#21352a]">₹0</span>
+        </div>
+        <div class="flex items-center justify-between"><span class="text-[#486052]">Dining</span> <span class="font-extrabold text-[#21352a]">At Table</span>
+        </div>
+        <div class="border-t border-[#21352a16] pt-4">
+         <div class="flex items-center justify-between"><span class="text-base font-bold text-[#21352a]">Total</span> <span id="summaryTotal" class="display-font text-3xl text-[#21352a]">₹0</span>
+         </div>
+        </div>
+       </div><button id="checkoutBtn" class="focus-ring mt-8 w-full rounded-full bg-[#21352a] px-6 py-4 text-sm font-extrabold uppercase tracking-[0.14em] text-[#f8f4eb] transition hover:bg-[#2f4a3a]"> Proceed to Checkout </button>
+      </aside>
+     </div>
+    </section>
+    <section id="pageCheckout" class="hide mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+     <div class="glass-card rounded-[2rem] p-6 sm:p-8">
+      <div class="mb-8">
+       <p class="mb-3 inline-flex items-center gap-2 rounded-full border border-[#6f8c5640] bg-[#6f8c5612] px-4 py-2 text-sm font-semibold text-[#4e6840]"><i data-lucide="receipt-text" class="h-4 w-4"></i> Final Step</p>
+       <h2 id="checkoutTitle" class="display-font text-4xl text-[#21352a] sm:text-5xl">Checkout</h2>
+       <p class="mt-3 text-base leading-7 text-[#486052]">Enter your table number and any special instructions for the kitchen.</p>
+      </div>
+      <div id="checkoutFeedback" class="mb-5 hidden rounded-2xl border px-4 py-3 text-sm font-semibold"></div>
+      <form id="checkoutForm" class="space-y-6">
+       <div><label for="tableNumber" class="mb-2 block text-sm font-bold uppercase tracking-[0.14em] text-[#21352a]">Table Number</label> <input id="tableNumber" name="table_number" inputmode="numeric" autocomplete="off" placeholder="Enter table number" class="focus-ring w-full rounded-2xl border border-[#21352a22] bg-white/80 px-5 py-4 text-base text-[#21352a] placeholder:text-[#7b8e83]">
+        <p class="mt-2 text-sm text-[#486052]">Only numbers are allowed.</p>
+       </div>
+       <div><label for="specialInstructions" class="mb-2 block text-sm font-bold uppercase tracking-[0.14em] text-[#21352a]">Special Instructions</label> <textarea id="specialInstructions" name="special_instructions" rows="5" placeholder="Anything you'd like us to know?" class="focus-ring w-full rounded-2xl border border-[#21352a22] bg-white/80 px-5 py-4 text-base text-[#21352a] placeholder:text-[#7b8e83]"></textarea>
+       </div>
+       <div class="flex flex-col gap-3 sm:flex-row"><button type="button" id="backToCartBtn" class="focus-ring rounded-full border border-[#21352a20] bg-white/70 px-6 py-4 text-sm font-bold text-[#21352a] transition hover:bg-white"> Back to Cart </button> <button type="submit" id="placeOrderBtn" class="focus-ring rounded-full bg-[#6f8c56] px-7 py-4 text-sm font-extrabold uppercase tracking-[0.14em] text-[#f8f4eb] transition hover:bg-[#5f774b]"> Place Order </button>
+       </div>
+      </form>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#f5f1e8",
+      surface_color: "#ffffff",
+      text_color: "#21352a",
+      primary_action_color: "#6f8c56",
+      secondary_action_color: "#c4974c",
+      font_family: "DM Serif Display",
+      font_size: 16,
+      restaurant_name: "relax",
+      restaurant_subtitle: "Pure Veg Restaurant",
+      welcome_heading: "Welcome to relax",
+      welcome_subheading: "Scan, Order & Enjoy Authentic Vegetarian Delights",
+      menu_title: "Our Menu",
+      menu_subtitle: "Authentic vegetarian delights crafted with love",
+      cart_title: "Your Cart",
+      checkout_title: "Checkout",
+      success_message: "Your order has been placed successfully at Relax Pure Veg"
+    };
+
+    const menuItems = [
+      {
+        id: 1,
+        name: "Aloo Bhaji",
+        category: "Bhaji",
+        description: "Comforting potato curry with warm spices and fresh coriander.",
+        price: 120,
+        image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 2,
+        name: "Paneer Butter Masala",
+        category: "Paneer Special",
+        description: "Creamy tomato gravy with soft paneer cubes and rich butter notes.",
+        price: 240,
+        image: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 3,
+        name: "Kadai Paneer",
+        category: "Paneer Special",
+        description: "Paneer tossed with peppers, onions, and bold kadai masala.",
+        price: 250,
+        image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 4,
+        name: "Chilli Paneer",
+        category: "Starters",
+        description: "Crisp paneer bites glazed in a tangy Indo-Chinese sauce.",
+        price: 220,
+        image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 5,
+        name: "Soyabean Masala",
+        category: "Soyabean Special",
+        description: "Protein-rich soy nuggets in a spiced onion-tomato gravy.",
+        price: 210,
+        image: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 6,
+        name: "Veg Kolhapuri",
+        category: "Bhaji",
+        description: "A fiery Maharashtrian mixed vegetable curry with robust flavor.",
+        price: 230,
+        image: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 7,
+        name: "Mix Veg",
+        category: "Bhaji",
+        description: "Seasonal vegetables simmered gently in a savory house-style gravy.",
+        price: 200,
+        image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 8,
+        name: "Jeera Rice",
+        category: "Rice",
+        description: "Fragrant basmati rice tempered with cumin and herbs.",
+        price: 140,
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 9,
+        name: "Butter Roti",
+        category: "Roti",
+        description: "Soft whole wheat roti finished with a touch of butter.",
+        price: 25,
+        image: "https://images.unsplash.com/photo-1601050690117-94f5f6fae6f4?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 10,
+        name: "Masala Dosa",
+        category: "South Indian",
+        description: "Crispy dosa rolled with potato masala, served with chutney vibes.",
+        price: 130,
+        image: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 11,
+        name: "Tomato Soup",
+        category: "Starters",
+        description: "Silky tomato soup with pepper, basil, and a warm finish.",
+        price: 90,
+        image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80"
+      },
+      {
+        id: 12,
+        name: "Sweet Lime Soda",
+        category: "Beverages",
+        description: "Refreshing citrus cooler with a lively sparkling twist.",
+        price: 70,
+        image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=900&q=80"
+      }
+    ];
+
+    const filters = ["All", "Starters", "Paneer Special", "Soyabean Special", "Bhaji", "Rice", "Roti", "South Indian", "Beverages"];
+
+    const state = {
+      currentPage: "welcome",
+      currentFilter: "All",
+      cart: JSON.parse(localStorage.getItem("relax_cart") || "[]")
+    };
+
+    const pages = {
+      welcome: document.getElementById("pageWelcome"),
+      menu: document.getElementById("pageMenu"),
+      cart: document.getElementById("pageCart"),
+      checkout: document.getElementById("pageCheckout")
+    };
+
+    const elements = {
+      cartBadge: document.getElementById("cartBadge"),
+      filterWrap: document.getElementById("filterWrap"),
+      dishGrid: document.getElementById("dishGrid"),
+      cartList: document.getElementById("cartList"),
+      emptyCartState: document.getElementById("emptyCartState"),
+      summaryItems: document.getElementById("summaryItems"),
+      summarySubtotal: document.getElementById("summarySubtotal"),
+      summaryTotal: document.getElementById("summaryTotal"),
+      cartMessage: document.getElementById("cartMessage"),
+      checkoutFeedback: document.getElementById("checkoutFeedback"),
+      checkoutForm: document.getElementById("checkoutForm"),
+      tableNumber: document.getElementById("tableNumber"),
+      specialInstructions: document.getElementById("specialInstructions"),
+      placeOrderBtn: document.getElementById("placeOrderBtn")
+    };
+
+    function saveCart() {
+      localStorage.setItem("relax_cart", JSON.stringify(state.cart));
+    }
+
+    function showPage(page) {
+      state.currentPage = page;
+      Object.entries(pages).forEach(([key, section]) => {
+        section.classList.toggle("hide", key !== page);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (page === "menu") {
+        renderFilters();
+        renderMenu();
+      }
+      if (page === "cart") {
+        renderCart();
+      }
+      if (page === "checkout") {
+        updateCheckoutButtonState();
+      }
+      lucide.createIcons();
+    }
+
+    function scrollToDishes() {
+      const anchor = document.getElementById("dishesAnchor");
+      anchor.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function renderFilters() {
+      elements.filterWrap.innerHTML = "";
+      filters.forEach(filter => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "filter-chip focus-ring rounded-full border border-[#21352a20] bg-white/75 px-4 py-2 text-sm font-bold text-[#21352a] transition hover:bg-white";
+        if (filter === state.currentFilter) button.classList.add("active");
+        button.textContent = filter;
+        button.addEventListener("click", () => {
+          state.currentFilter = filter;
+          renderFilters();
+          renderMenu();
+        });
+        elements.filterWrap.appendChild(button);
+      });
+    }
+
+    function renderMenu() {
+      const visibleItems = state.currentFilter === "All"
+        ? menuItems
+        : menuItems.filter(item => item.category === state.currentFilter);
+
+      elements.dishGrid.innerHTML = "";
+      visibleItems.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "dish-card overflow-hidden rounded-[1.75rem] border border-[#21352a10] bg-white/82 shadow-sm";
+        card.innerHTML = `
+          <div class="relative">
+            <img
+              src="${item.image}"
+              alt="${item.name}"
+              loading="lazy"
+              class="h-56 w-full object-cover"
+              onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg,#6f8c56,#c4974c)'; this.parentElement.style.height='224px';"
+            />
+            <div class="absolute left-4 top-4 rounded-full bg-[#f8f4eb]/90 px-3 py-1 text-xs font-extrabold uppercase tracking-[0.14em] text-[#21352a]">${item.category}</div>
+          </div>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="display-font text-2xl text-[#21352a]">${item.name}</h3>
+                <p class="mt-2 text-sm leading-6 text-[#486052]">${item.description}</p>
+              </div>
+              <p class="whitespace-nowrap text-lg font-extrabold text-[#6f8c56]">₹${item.price}</p>
+            </div>
+
+            <div class="mt-5 flex items-center justify-between gap-3">
+              <div>
+                <label for="qty-${item.id}" class="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-[#486052]">Quantity</label>
+                <select id="qty-${item.id}" class="focus-ring rounded-full border border-[#21352a20] bg-[#f8f4eb] px-4 py-2 text-sm font-bold text-[#21352a]">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <button data-add-id="${item.id}" class="focus-ring rounded-full bg-[#21352a] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#f8f4eb] transition hover:bg-[#2f4a3a]">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        `;
+        elements.dishGrid.appendChild(card);
+      });
+
+      elements.dishGrid.querySelectorAll("[data-add-id]").forEach(button => {
+        button.addEventListener("click", () => {
+          const itemId = Number(button.getAttribute("data-add-id"));
+          const qtySelect = document.getElementById(`qty-${itemId}`);
+          const quantity = Number(qtySelect.value);
+          addToCart(itemId, quantity);
+          showPage("cart");
+        });
+      });
+
+      lucide.createIcons();
+    }
+
+    function addToCart(itemId, quantity) {
+      const dish = menuItems.find(item => item.id === itemId);
+      const existing = state.cart.find(item => item.id === itemId);
+      if (existing) {
+        existing.quantity = Math.min(5, existing.quantity + quantity);
+      } else {
+        state.cart.push({
+          id: dish.id,
+          name: dish.name,
+          price: dish.price,
+          quantity: Math.min(5, quantity)
+        });
+      }
+      saveCart();
+      updateCartBadge();
+    }
+
+    function removeFromCart(itemId) {
+      state.cart = state.cart.filter(item => item.id !== itemId);
+      saveCart();
+      updateCartBadge();
+      renderCart();
+    }
+
+    function updateCartBadge() {
+      const totalQty = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+      elements.cartBadge.textContent = totalQty;
+    }
+
+    function showInlineMessage(target, message, type) {
+      target.textContent = message;
+      target.classList.remove("hidden");
+      if (type === "error") {
+        target.className = "mb-4 rounded-2xl border border-[#b74a3c40] bg-[#b74a3c12] px-4 py-3 text-sm font-semibold text-[#8c3429]";
+      } else {
+        target.className = "mb-4 rounded-2xl border border-[#6f8c5640] bg-[#6f8c5612] px-4 py-3 text-sm font-semibold text-[#466137]";
+      }
+    }
+
+    function renderCart() {
+      elements.cartList.innerHTML = "";
+      const hasItems = state.cart.length > 0;
+      elements.emptyCartState.classList.toggle("hidden", hasItems);
+
+      if (!hasItems) {
+        elements.summaryItems.textContent = "0";
+        elements.summarySubtotal.textContent = "₹0";
+        elements.summaryTotal.textContent = "₹0";
+        return;
+      }
+
+      let itemCount = 0;
+      let subtotal = 0;
+
+      state.cart.forEach(item => {
+        itemCount += item.quantity;
+        const total = item.price * item.quantity;
+        subtotal += total;
+
+        const row = document.createElement("div");
+        row.className = "rounded-[1.5rem] border border-[#21352a14] bg-white/75 p-5";
+        row.innerHTML = `
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 class="display-font text-2xl text-[#21352a]">${item.name}</h3>
+              <p class="mt-1 text-sm text-[#486052]">Quantity: <span class="font-bold text-[#21352a]">${item.quantity}</span></p>
+              <p class="mt-1 text-sm text-[#486052]">Price: <span class="font-bold text-[#21352a]">₹${item.price}</span></p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="rounded-full bg-[#f5f1e8] px-4 py-2 text-sm font-extrabold text-[#21352a]">Total ₹${total}</div>
+              <button data-remove-id="${item.id}" class="focus-ring rounded-full border border-[#b74a3c35] bg-[#b74a3c12] px-4 py-2 text-sm font-bold text-[#8c3429] transition hover:bg-[#b74a3c20]">
+                Remove
+              </button>
+            </div>
+          </div>
+        `;
+        elements.cartList.appendChild(row);
+      });
+
+      elements.summaryItems.textContent = String(itemCount);
+      elements.summarySubtotal.textContent = `₹${subtotal}`;
+      elements.summaryTotal.textContent = `₹${subtotal}`;
+
+      elements.cartList.querySelectorAll("[data-remove-id]").forEach(button => {
+        button.addEventListener("click", () => {
+          removeFromCart(Number(button.getAttribute("data-remove-id")));
+        });
+      });
+    }
+
+    function updateCheckoutButtonState() {
+      elements.placeOrderBtn.disabled = false;
+      elements.placeOrderBtn.classList.remove("opacity-60", "cursor-not-allowed");
+    }
+
+    function handlePlaceOrder(event) {
+      event.preventDefault();
+      elements.checkoutFeedback.classList.add("hidden");
+
+      const tableValue = elements.tableNumber.value.trim();
+      const validTable = /^[0-9]+$/.test(tableValue);
+
+      if (!validTable) {
+        showInlineMessage(elements.checkoutFeedback, "Please enter a valid table number using numbers only.", "error");
+        return;
+      }
+
+      if (state.cart.length === 0) {
+        showInlineMessage(elements.checkoutFeedback, "Your cart is empty. Please add dishes before placing the order.", "error");
+        return;
+      }
+
+      elements.placeOrderBtn.disabled = true;
+      elements.placeOrderBtn.classList.add("opacity-60", "cursor-not-allowed");
+      elements.placeOrderBtn.textContent = "Placing Order...";
+
+      setTimeout(() => {
+        state.cart = [];
+        saveCart();
+        updateCartBadge();
+        renderCart();
+        elements.checkoutForm.reset();
+        elements.placeOrderBtn.disabled = false;
+        elements.placeOrderBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        elements.placeOrderBtn.textContent = "Place Order";
+        showInlineMessage(
+          elements.checkoutFeedback,
+          (window.elementSdk && window.elementSdk.config.success_message) || defaultConfig.success_message,
+          "success"
+        );
+      }, 900);
+    }
+
+    function applyConfig(config) {
+      const current = { ...defaultConfig, ...config };
+      document.body.style.backgroundColor = current.background_color;
+      document.querySelector(".page-bg").style.background = `radial-gradient(circle at top left, ${hexToRgba(current.primary_action_color, 0.18)}, transparent 28%), radial-gradient(circle at bottom right, ${hexToRgba(current.secondary_action_color, 0.16)}, transparent 30%), linear-gradient(135deg, ${lightenHex(current.background_color, 4)} 0%, ${darkenHex(current.background_color, 2)} 100%)`;
+
+      const customFontStack = `"${current.font_family}", "DM Serif Display", serif`;
+      const bodyFontStack = `"Manrope", sans-serif`;
+
+      document.querySelectorAll(".display-font").forEach(el => {
+        el.style.fontFamily = customFontStack;
+      });
+      document.body.style.fontFamily = bodyFontStack;
+
+      const base = current.font_size || 16;
+      document.getElementById("welcomeHeading").style.fontSize = `${base * 2.8}px`;
+      document.getElementById("welcomeSubheading").style.fontSize = `${base * 1.05}px`;
+      document.getElementById("menuTitle").style.fontSize = `${base * 2.4}px`;
+      document.getElementById("menuSubtitle").style.fontSize = `${base}px`;
+      document.getElementById("cartTitle").style.fontSize = `${base * 2.4}px`;
+      document.getElementById("checkoutTitle").style.fontSize = `${base * 2.6}px`;
+
+      const textEls = [
+        "topRestaurantName","topRestaurantSubtitle","heroRestaurantName","heroRestaurantSubtitle",
+        "welcomeHeading","welcomeSubheading","menuTitle","menuSubtitle","cartTitle","checkoutTitle"
+      ];
+      textEls.forEach(id => {
+        document.getElementById(id).style.color = current.text_color;
+      });
+
+      document.getElementById("logoCircle").style.backgroundColor = current.primary_action_color;
+      document.getElementById("heroLogoCircle").style.backgroundColor = current.primary_action_color;
+
+      document.querySelectorAll(".glass-card").forEach(el => {
+        el.style.backgroundColor = hexToRgba(current.surface_color, 0.78);
+      });
+
+      document.querySelectorAll("#orderNowBtn, #browseNowBtn, #placeOrderBtn").forEach(el => {
+        el.style.backgroundColor = current.primary_action_color;
+        el.style.color = "#f8f4eb";
+      });
+
+      document.querySelectorAll("#viewMenuBtn, #navCart span").forEach(el => {
+        el.style.backgroundColor = current.secondary_action_color;
+        el.style.color = current.text_color;
+      });
+
+      document.getElementById("topRestaurantName").textContent = current.restaurant_name;
+      document.getElementById("heroRestaurantName").textContent = current.restaurant_name;
+      document.getElementById("topRestaurantSubtitle").textContent = current.restaurant_subtitle;
+      document.getElementById("heroRestaurantSubtitle").textContent = current.restaurant_subtitle;
+      document.getElementById("welcomeHeading").textContent = current.welcome_heading;
+      document.getElementById("welcomeSubheading").textContent = current.welcome_subheading;
+      document.getElementById("menuTitle").textContent = current.menu_title;
+      document.getElementById("menuSubtitle").textContent = current.menu_subtitle;
+      document.getElementById("cartTitle").textContent = current.cart_title;
+      document.getElementById("checkoutTitle").textContent = current.checkout_title;
+    }
+
+    function hexToRgba(hex, alpha) {
+      const clean = hex.replace("#", "");
+      const bigint = parseInt(clean, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function lightenHex(hex, percent) {
+      return shadeHex(hex, percent);
+    }
+
+    function darkenHex(hex, percent) {
+      return shadeHex(hex, -percent);
+    }
+
+    function shadeHex(hex, percent) {
+      const clean = hex.replace("#", "");
+      let r = parseInt(clean.substring(0, 2), 16);
+      let g = parseInt(clean.substring(2, 4), 16);
+      let b = parseInt(clean.substring(4, 6), 16);
+
+      r = Math.min(255, Math.max(0, r + Math.round((255 * percent) / 100)));
+      g = Math.min(255, Math.max(0, g + Math.round((255 * percent) / 100)));
+      b = Math.min(255, Math.max(0, b + Math.round((255 * percent) / 100)));
+
+      return "#" + [r, g, b].map(v => v.toString(16).padStart(2, "0")).join("");
+    }
+
+    function initElementSdk() {
+      if (!window.elementSdk) return;
+
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => window.elementSdk.setConfig({ surface_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => window.elementSdk.setConfig({ primary_action_color: value })
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => window.elementSdk.setConfig({ secondary_action_color: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => window.elementSdk.setConfig({ font_family: value })
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => window.elementSdk.setConfig({ font_size: value })
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["restaurant_name", config.restaurant_name || defaultConfig.restaurant_name],
+          ["restaurant_subtitle", config.restaurant_subtitle || defaultConfig.restaurant_subtitle],
+          ["welcome_heading", config.welcome_heading || defaultConfig.welcome_heading],
+          ["welcome_subheading", config.welcome_subheading || defaultConfig.welcome_subheading],
+          ["menu_title", config.menu_title || defaultConfig.menu_title],
+          ["menu_subtitle", config.menu_subtitle || defaultConfig.menu_subtitle],
+          ["cart_title", config.cart_title || defaultConfig.cart_title],
+          ["checkout_title", config.checkout_title || defaultConfig.checkout_title],
+          ["success_message", config.success_message || defaultConfig.success_message]
+        ])
+      });
+
+      applyConfig(window.elementSdk.config || defaultConfig);
+    }
+
+    document.getElementById("brandBtn").addEventListener("click", () => showPage("welcome"));
+    document.getElementById("navWelcome").addEventListener("click", () => showPage("welcome"));
+    document.getElementById("navMenu").addEventListener("click", () => showPage("menu"));
+    document.getElementById("navCart").addEventListener("click", () => showPage("cart"));
+    document.getElementById("orderNowBtn").addEventListener("click", () => showPage("menu"));
+    document.getElementById("viewMenuBtn").addEventListener("click", () => showPage("menu"));
+    document.getElementById("browseNowBtn").addEventListener("click", scrollToDishes);
+    document.getElementById("continueShoppingBtn").addEventListener("click", () => showPage("menu"));
+    document.getElementById("checkoutBtn").addEventListener("click", () => {
+      if (state.cart.length === 0) {
+        showPage("cart");
+        showInlineMessage(elements.cartMessage, "Your cart is empty. Please add dishes before checkout.", "error");
+        return;
+      }
+      elements.cartMessage.classList.add("hidden");
+      showPage("checkout");
+    });
+    document.getElementById("backToCartBtn").addEventListener("click", () => showPage("cart"));
+    elements.checkoutForm.addEventListener("submit", handlePlaceOrder);
+    elements.tableNumber.addEventListener("input", () => {
+      elements.tableNumber.value = elements.tableNumber.value.replace(/[^0-9]/g, "");
+    });
+
+    updateCartBadge();
+    renderFilters();
+    renderMenu();
+    renderCart();
+    initElementSdk();
+    showPage("welcome");
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e51765976e34919',t:'MTc3NDk4MjIxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
